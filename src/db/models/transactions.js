@@ -13,13 +13,13 @@ import { model, Schema } from 'mongoose';
             'main expenses',
             'products',
             'car',
-            'Self care',
-            'Child care',
-            'Household products',
-            'Education',
-            'Leisure',
-            'Entertainment',
-            'Other expenses',
+            'self care',
+            'child care',
+            'household products',
+            'education',
+            'leisure',
+            'entertainment',
+            'other expenses',
         ],
         required: true,
     },
@@ -35,7 +35,7 @@ import { model, Schema } from 'mongoose';
     date: {
         type: Date,
         required: true,
-    },
+    }
 },
 {
     timestamps: true,
@@ -43,4 +43,4 @@ import { model, Schema } from 'mongoose';
     },
 );
 
-export const transactionsCollection = model('transactions', transactionsSchema);
+export const transactionsCollection = model('Transaction', transactionsSchema);

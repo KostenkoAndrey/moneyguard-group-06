@@ -24,6 +24,7 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "http-errors": "^2.0.0",
+    "joi": "^17.13.3",
     "mongoose": "^8.13.2",
     "pino-http": "^10.4.0"
   }
