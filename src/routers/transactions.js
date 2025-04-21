@@ -1,6 +1,13 @@
 import { Router } from "express";
 
-import { getTransactionsController, getTransactionByIdController, createTransactionController, deleteTransactionController, upsertTransactionController, patchTransactionController } from '../controllers/transactions.js';
+import {
+    getTransactionsController,
+    getTransactionByIdController,
+    createTransactionController,
+    deleteTransactionController,
+    upsertTransactionController,
+    patchTransactionController
+} from '../controllers/transactions.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';

@@ -1,6 +1,7 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import dotenv from "dotenv";
 
 import { getEnvVar } from './utils/getEnvVar.js';
@@ -13,6 +14,7 @@ const PORT = Number(getEnvVar('PORT', '3000'));
 
 export const startServer = () => {
   const app = express();
+  app.use(cookieParser());
 
   app.use(express.json({
     type: ['application/json', 'application/vnd.api+json'],
