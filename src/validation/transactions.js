@@ -7,14 +7,14 @@ export const createTransactionSchema = Joi.object({
             'main expenses',
             'products',
             'car',
-            'Self care',
-            'Child care',
-            'Household products',
-            'Education',
-            'Leisure',
-            'Entertainment',
-            'Other expenses'
-        ).required(),
+            'self care',
+            'child care',
+            'household products',
+            'education',
+            'leisure',
+            'entertainment',
+            'other expenses'
+            ).required(),
     summ: Joi.number().min(0).required(),
     comments: Joi.string().allow(''),
     date: Joi.date().required(),
@@ -28,15 +28,16 @@ export const updateTransactionSchema = Joi.object({
             'main expenses',
             'products',
             'car',
-            'Self care',
-            'Child care',
-            'Household products',
-            'Education',
-            'Leisure',
-            'Entertainment',
-            'Other expenses'
-        ),
+            'self care',
+            'child care',
+            'household products',
+            'education',
+            'leisure',
+            'entertainment',
+            'other expenses'
+            ),
     summ: Joi.number().min(0),
     comments: Joi.string().allow(''),
-    date: Joi.date()
+    date: Joi.date(),
+    userId: Joi.string().required()
 });
