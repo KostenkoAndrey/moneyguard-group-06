@@ -19,13 +19,15 @@ export const getAllTransactions = async ({
   if (filter.type) {
     transactionsQuery.where('type').equals(filter.type);
   }
+
   if (filter.category) {
     transactionsQuery.where('category').equals(filter.category);
   }
 
-  const transactionsCount = await transactionsCollection.find().merge(transactionsQuery).countDocuments();
+  const [ transactionsCount, transactions ] = await Promise.all([
+  transactionsCollection.find().merge(transactionsQuery).countDocuments(),
+  transactionsQuery.skip(skip).limit(limit).sort({ [sortBy]: sortOrder }).exec()]);
 
-  const transactions = await transactionsQuery.skip(skip).limit(limit).sort({ [sortBy]: sortOrder }).exec();
 
   const paginationData = calculatePaginationData(transactionsCount, perPage, page);
 
