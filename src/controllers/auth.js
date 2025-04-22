@@ -1,8 +1,10 @@
+import createHttpError from "http-errors";
 import {
     registerUser,
     loginUser,
     logoutUser,
-    refreshSession
+    refreshSession,
+    getUserInfo
 } from "../services/auth.js";
 
 
@@ -74,4 +76,13 @@ export async function refreshController(req, res) {
         message: "Successfully refreshed a session!",
         data: { accessToken: session.accessToken },
     });
+}
+
+//** User Info   */
+export async function userInfoController(req, res) {
+    const { payload } = req.cookies;
+    const session = await getUserInfo(payload);
+    console.log(session);
+
+    res.send(session);
 }

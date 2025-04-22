@@ -65,7 +65,15 @@ export async function refreshSession(sessionId, refreshToken) {
         userId: currentSession.userId,
         accessToken: crypto.randomBytes(30).toString('base64'),
         refreshToken: crypto.randomBytes(30).toString('base64'),
-        accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000), // 15 min
+        // accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000), // 15 min
+        accessTokenValidUntil: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // 1 day
         refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     });
 }
+//** User info service */
+export async function getUserInfo(payload) {
+    // in process...
+    return undefined;
+
+
+};

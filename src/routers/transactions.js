@@ -13,6 +13,7 @@ import { isValidId } from '../middlewares/isValidId.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { createTransactionSchema, updateTransactionSchema } from '../validation/transactions.js';
 
+
 const router = Router();
 
 router.get('/', ctrlWrapper(getTransactionsController));
@@ -21,5 +22,6 @@ router.post('/', validateBody(createTransactionSchema), ctrlWrapper(createTransa
 router.delete('/:transactionId', isValidId, ctrlWrapper(deleteTransactionController));
 router.put('/:transactionId', isValidId, validateBody(createTransactionSchema), ctrlWrapper(upsertTransactionController));
 router.patch('/:transactionId', isValidId, validateBody(updateTransactionSchema), ctrlWrapper(patchTransactionController));
+
 
 export default router;
