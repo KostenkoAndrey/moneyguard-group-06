@@ -9,11 +9,12 @@ export const getAllTransactions = async ({
   sortOrder = SORT_ORDER.ASC,
   sortBy = '_id',
   filter = {},
-  }) => {
+  userId,
+}) => {
 
   const limit = perPage;
   const skip = (page - 1) * perPage;
-  const transactionsQuery = transactionsCollection.find();
+  const transactionsQuery = transactionsCollection.find({ userId });
 
   if (filter.type) {
     transactionsQuery.where('type').equals(filter.type);
@@ -38,7 +39,7 @@ export const getAllTransactions = async ({
 
 
 export const getTransactionsById = async (transactionId) => {
-    console.log(transactionId);
+  console.log(transactionId);
 
   const transaction = await transactionsCollection.findById(transactionId);
   return transaction;

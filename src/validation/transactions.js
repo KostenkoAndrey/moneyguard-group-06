@@ -3,7 +3,7 @@ import Joi from 'joi';
 export const createTransactionSchema = Joi.object({
     type: Joi.string().valid('+', '-').required(),
     category: Joi.string()
-            .valid(
+        .valid(
             'main expenses',
             'products',
             'car',
@@ -17,13 +17,14 @@ export const createTransactionSchema = Joi.object({
             ).required(),
     summ: Joi.number().min(0).required(),
     comments: Joi.string().allow(''),
-    date: Joi.date().required()
+    date: Joi.date().required(),
+    userId: Joi.string().required()
 });
 
 export const updateTransactionSchema = Joi.object({
     type: Joi.string().valid('+', '-'),
     category: Joi.string()
-            .valid(
+        .valid(
             'main expenses',
             'products',
             'car',
@@ -37,5 +38,6 @@ export const updateTransactionSchema = Joi.object({
             ),
     summ: Joi.number().min(0),
     comments: Joi.string().allow(''),
-    date: Joi.date()
+    date: Joi.date(),
+    userId: Joi.string().required()
 });
