@@ -1,35 +1,29 @@
-const parseCategoryOrType = (categoryOrType) => {
-const isString = typeof categoryOrType === 'string';
-if (!isString) return;
+const allowedCategories = [
+    'main expenses',
+    'products',
+    'car',
+    'self care',
+    'child care',
+    'household products',
+    'education',
+    'leisure',
+    'entertainment',
+    'other expenses'
+];
 
-const isCategory = (categoryOrType) => [
-        'main expenses',
-        'products',
-        'car',
-        'self care',
-        'child care',
-        'household products',
-        'education',
-        'leisure',
-        'entertainment',
-        'other expenses'].includes(categoryOrType);
+const allowedTypes = ['+', '-'];
 
-const isType = (categoryOrType) => [ '+', '-' ].includes(categoryOrType);
-
-if (isCategory(categoryOrType)) return categoryOrType;
-if (isType(categoryOrType)) return categoryOrType;
+const parseCategoryOrType = (value) => {
+if (typeof value !== 'string' || value.trim() === '') return;
+if (allowedCategories.includes(value)) return value;
+if (allowedTypes.includes(value)) return value;
 };
 
 const parseNumber = (number) => {
-    const isString = typeof number === 'string';
-    if (!isString) return;
-
-    const parsedNumber = parseInt(number);
-    if (Number.isNaN(parsedNumber)) {
-    return;
-    }
-
-    return parsedNumber;
+if (typeof number !== 'string' || number.trim() === '') return;
+const parsedNumber = parseFloat(number);
+if (Number.isNaN(parsedNumber)) return;
+return parsedNumber;
 };
 
 export const parseFilterParams = (query) => {
