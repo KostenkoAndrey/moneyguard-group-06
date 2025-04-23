@@ -1,0 +1,55 @@
+tags:
+  - Auth
+summary: Create a new user
+operationId: Signup
+description: 'Create a new user'
+security: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - email
+          - password
+        properties:
+          name:
+            type: string
+            description: "User's name"
+            example: 'John Doe'
+          email:
+            type: string
+            format: email
+            description: "User's email"
+            example: example@gmail.com
+          password:
+            type: string
+            description: "User's password"
+            example: ExamplePassword
+responses:
+  '201':
+    description: Create a new user
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully created a user!
+            data:
+              type: object
+              $ref: '../../components/schemas/user.yaml'
+  '400':
+    $ref: '../../components/responses/auth/auth_400.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'

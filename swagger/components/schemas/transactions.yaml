@@ -1,0 +1,49 @@
+type: object
+required:
+  - _id
+  - type
+  - category
+  - summ
+  - date
+properties:
+  _id:
+    description: "Transaction's id"
+    type: string
+    example: 65e4decdd286b30065d54af9
+  type:
+    description: "Transaction's type"
+    type: string
+    enum: ['+', '-']
+    example: '+'
+  category:
+    description: "Transaction's category"
+    type: string
+    enum: [
+            'main expenses',
+            'products',
+            'car',
+            'self care',
+            'child care',
+            'household products',
+            'education',
+            'leisure',
+            'entertainment',
+            'other expenses',
+            ]
+    example: "products"
+  summ:
+    description: "Transaction's amount"
+    type: number
+    example: 888.88
+  comments:
+    description: "Transaction's comments"
+    type: string
+    example: "Some comments"
+  date:
+    description: 'Creation date'
+    format: date-time
+    example: '2020-02-20T00:00:00.000Z'
+  parentId:
+    description: "Transaction's parent id"
+    type: string
+    example: 65e4decdd286b30065d54af9
