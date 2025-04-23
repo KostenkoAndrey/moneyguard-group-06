@@ -3,7 +3,7 @@ import Joi from 'joi';
 export const createTransactionSchema = Joi.object({
     type: Joi.string().valid('+', '-').required(),
     category: Joi.string()
-        .valid(
+            .valid(
             'main expenses',
             'products',
             'car',
@@ -23,7 +23,7 @@ export const createTransactionSchema = Joi.object({
 export const updateTransactionSchema = Joi.object({
     type: Joi.string().valid('+', '-'),
     category: Joi.string()
-        .valid(
+            .valid(
             'main expenses',
             'products',
             'car',
