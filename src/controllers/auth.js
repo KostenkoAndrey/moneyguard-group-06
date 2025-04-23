@@ -1,4 +1,4 @@
-import createHttpError from "http-errors";
+import { User } from '../db/models/user.js';
 import {
     registerUser,
     loginUser,
@@ -6,7 +6,6 @@ import {
     refreshSession,
     getUserInfo
 } from "../services/auth.js";
-
 
 
 //** register user   */
@@ -18,6 +17,7 @@ export async function registerController(req, res) {
         data: user,
     });
 }
+
 
 //** login user  */
 export async function loginController(req, res) {
@@ -34,17 +34,22 @@ export async function loginController(req, res) {
         expire: session.refreshTokenValidUntil,
     });
 
+    const userInfoAdd = await User.findOne();
+    const { name, email, balance } = {
+        name: userInfoAdd.name,
+        email: userInfoAdd.email,
+        balance: userInfoAdd.balance,
+    };
     res.status(200).json({
         status: 200,
         message: "User logged in successfully",
-        data: { accessToken: session.accessToken },
+        data: { name, email, balance, accessToken: session.accessToken },
     });
 }
 
+
 //** logout user  */
 export async function logoutController(req, res) {
-    // console.log(req.cookies);
-
     const { sessionId, refreshToken } = req.cookies;
     if (typeof sessionId == "string" && typeof refreshToken == "string") {
         await logoutUser(sessionId, refreshToken);
@@ -52,9 +57,8 @@ export async function logoutController(req, res) {
     res.clearCookie("sessionId");
     res.clearCookie("refreshToken");
     res.status(204).end();
-
-    // res.send();
 };
+
 
 //** refresh session  */
 export async function refreshController(req, res) {
@@ -78,11 +82,21 @@ export async function refreshController(req, res) {
     });
 }
 
+
 //** User Info   */
 export async function userInfoController(req, res) {
-    const { payload } = req.cookies;
-    const session = await getUserInfo(payload);
-    console.log(session);
+    const { sessionId, refreshToken } = req.cookies;
+    const session = await getUserInfo(sessionId, refreshToken);
+    const temp = {
+        id: session._id,
+        name: session.name,
+        email: session.email,
+        balance: session.balance,
+    };
 
-    res.send(session);
+    res.status(200).json({
+        status: 200,
+        message: "Successfully found user info!",
+        data: temp,
+    });
 }

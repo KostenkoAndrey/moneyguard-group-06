@@ -4,7 +4,6 @@ import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
 import createHttpError from 'http-errors';
 
-
 //** register user   */
 export async function registerUser(payload) {
     const user = await User.findOne({ email: payload.email });
@@ -71,9 +70,15 @@ export async function refreshSession(sessionId, refreshToken) {
     });
 }
 //** User info service */
-export async function getUserInfo(payload) {
-    // in process...
-    return undefined;
+export async function getUserInfo(sessionId, refreshToken) {
+    const currentSession = await Session.findOne({ _id: sessionId, refreshToken });
 
-
+    if (currentSession === null) {
+        throw createHttpError.Unauthorized('Session not found');
+    }
+    if (currentSession.refreshTokenValidUntil < new Date()) {
+        throw createHttpError.Unauthorized('Access token expired');
+    }
+    const user = await User.findOne();
+    return user;
 };
