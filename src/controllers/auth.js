@@ -43,9 +43,11 @@ export async function loginController(req, res) {
     res.status(200).json({
         status: 200,
         message: "User logged in successfully",
-        data: { name, email, balance, accessToken: session.accessToken },
-    });
+        data: { token: session.accessToken, user: { name, email, balance } },
+    },
+    );
 }
+
 
 
 //** logout user  */
