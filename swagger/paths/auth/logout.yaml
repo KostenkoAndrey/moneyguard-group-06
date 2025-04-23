@@ -1,8 +1,8 @@
 tags:
   - Auth
-summary: Logout a user
+summary: Log out user
 operationId: Logout
-description: 'Logs out a user by invalidating the token'
+description: 'Log out user by invalidating the token'
 security:
   - bearerAuth: []
 responses:

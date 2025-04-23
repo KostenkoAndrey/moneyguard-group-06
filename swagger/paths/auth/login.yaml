@@ -1,8 +1,8 @@
 tags:
   - Auth
-summary: Login a user
+summary: Login user
 operationId: Login
-description: 'Login a user'
+description: 'Login user'
 security: []
 requestBody:
   required: true

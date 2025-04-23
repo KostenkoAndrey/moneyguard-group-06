@@ -118,9 +118,9 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Login a user",
+        "summary": "Login user",
         "operationId": "Login",
-        "description": "Login a user",
+        "description": "Login user",
         "security": [],
         "requestBody": {
           "required": true,
@@ -205,9 +205,9 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Logout a user",
+        "summary": "Log out user",
         "operationId": "Logout",
-        "description": "Logs out a user by invalidating the token",
+        "description": "Log out user by invalidating the token",
         "security": [
           {
             "bearerAuth": []
