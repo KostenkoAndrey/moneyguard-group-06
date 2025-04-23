@@ -1,0 +1,101 @@
+tags:
+  - Transactions
+summary: Get list of transactions
+operationId: getTransactions
+description: 'Get list of transactions'
+security:
+  - bearerAuth: []
+parameters:
+  - in: query
+    name: page
+    schema:
+      type: integer
+    example: 1
+  - in: query
+    name: perPage
+    schema:
+      type: integer
+      example: 10
+  - in: query
+    name: sortBy
+    schema:
+      type: string
+      enum: [ '_id', 'type', 'category', 'summ', 'comments', 'date' ]
+      example: 'summ'
+    description: "Default value - _id"
+  - in: query
+    name: sortOrder
+    schema:
+      type: string
+      enum: ['asc', 'desc']
+      example: 'asc'
+  - in: query
+    name: type
+    schema:
+      type: string
+      enum: ['+', '-']
+      example: "+"
+  - in: query
+    name: category
+    schema:
+      type: string
+      enum: [ 'main expenses', 'products', 'car', 'self care', 'child care', 'household products', 'education', 'leisure', 'entertainment', 'other expenses' ]
+      example: "main expenses"
+responses:
+  '200':
+    description: Successfully found students!
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully found transactions!
+            data:
+              type: object
+              required:
+                - data
+                - page
+                - perPage
+                - totalItems
+                - totalPages
+                - hasNextPage
+                - hasPreviousPage
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: '../../components/schemas/transactions.yaml'
+                page:
+                  type: number
+                  example: 1
+                perPage:
+                  type: number
+                  example: 10
+                totalItems:
+                  type: number
+                  example: 10
+                totalPages:
+                  type: number
+                  example: 1
+                hasNextPage:
+                  type: boolean
+                  example: false
+                hasPreviousPage:
+                  type: boolean
+                  example: true
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '404':
+    $ref: '../../components/responses/transactions/tx_404.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'
+
