@@ -38,38 +38,25 @@ export const getAllTransactions = async ({
 };
 
 
-export const getTransactionsById = async (transactionId) => {
-  console.log(transactionId);
-
-  const transaction = await transactionsCollection.findById(transactionId);
+export const getTransactionsById = async ( transactionId, userId ) => {
+  const transaction = await transactionsCollection.findById( { _id: transactionId, userId });
   return transaction;
 };
 
 
-export const createTransaction = async (payload) => {
-  const transaction = await transactionsCollection.create(payload);
+export const createTransaction = async (payload, userId ) => {
+  const transaction = await transactionsCollection.create({ ...payload, userId });
   return transaction;
 };
 
 
-export const deleteTransaction = async (transactionId) => {
-  const transaction = await transactionsCollection.findOneAndDelete({
-    _id: transactionId,
-  });
-
+export const deleteTransaction = async ( transactionId, userId) => {
+  const transaction = await transactionsCollection.findOneAndDelete({ _id: transactionId, userId });
   return transaction;
 };
 
-export const updateTransaction = async (transactionId, payload, options = {}) => {
-  const rawResult = await transactionsCollection.findOneAndUpdate(
-    { _id: transactionId },
-    payload,
-    {
-      new: true,
-      includeResultMetadata: true,
-      ...options,
-    },
-  );
+export const updateTransaction = async (filter, payload, options = {}) => {
+const rawResult = await transactionsCollection.findOneAndUpdate( filter, payload, { new: true, includeResultMetadata: true, ...options });
 
   if (!rawResult || !rawResult.value) return null;
 

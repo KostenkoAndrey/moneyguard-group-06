@@ -25,8 +25,8 @@ const transactionsSchema = new Schema(
         },
         summ: {
             type: Number,
-            required: true,
-            min: 0
+            min: 0,
+            required: true
         },
         comments: {
             type: String,

@@ -18,7 +18,6 @@ export const createTransactionSchema = Joi.object({
     summ: Joi.number().min(0).required(),
     comments: Joi.string().allow(''),
     date: Joi.date().required(),
-    userId: Joi.string().required()
 });
 
 export const updateTransactionSchema = Joi.object({
@@ -39,5 +38,4 @@ export const updateTransactionSchema = Joi.object({
     summ: Joi.number().min(0),
     comments: Joi.string().allow(''),
     date: Joi.date(),
-    userId: Joi.string().required()
 });
