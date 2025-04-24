@@ -34,12 +34,8 @@ export async function loginController(req, res) {
         expire: session.refreshTokenValidUntil,
     });
 
-    const userInfoAdd = await User.findOne();
-    const { name, email, balance } = {
-        name: userInfoAdd.name,
-        email: userInfoAdd.email,
-        balance: userInfoAdd.balance,
-    };
+    const { name, email, balance } = await getUserInfo(session._id, session.refreshToken);
+    // console.log(name, email, balance);
     res.status(200).json({
         status: 200,
         message: "User logged in successfully",
