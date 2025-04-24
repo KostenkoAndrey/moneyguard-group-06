@@ -70,7 +70,7 @@ export async function refreshSession(sessionId, refreshToken) {
     });
 }
 //** User info service */
-export async function getUserInfo(sessionId, refreshToken) {
+export async function getUserInfo(sessionId, refreshToken,) {
     const currentSession = await Session.findOne({ _id: sessionId, refreshToken });
 
     if (currentSession === null) {
@@ -79,6 +79,6 @@ export async function getUserInfo(sessionId, refreshToken) {
     if (currentSession.refreshTokenValidUntil < new Date()) {
         throw createHttpError.Unauthorized('Access token expired');
     }
-    const user = await User.findOne();
+    const user = await User.findOne({ _id: currentSession.userId });
     return user;
 };
