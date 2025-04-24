@@ -1,22 +1,9 @@
-const allowedCategories = [
-    'main expenses',
-    'products',
-    'car',
-    'self care',
-    'child care',
-    'household products',
-    'education',
-    'leisure',
-    'entertainment',
-    'other expenses'
-];
-
-const allowedTypes = ['+', '-'];
+import { ALLOWED_CATEGORIES, ALLOWED_TYPES } from "../constants/index.js";
 
 const parseCategoryOrType = (value) => {
 if (typeof value !== 'string' || value.trim() === '') return;
-if (allowedCategories.includes(value)) return value;
-if (allowedTypes.includes(value)) return value;
+if (ALLOWED_CATEGORIES.includes(value)) return value;
+if (ALLOWED_TYPES.includes(value)) return value;
 };
 
 const parseNumber = (number) => {
@@ -27,15 +14,15 @@ return parsedNumber;
 };
 
 export const parseFilterParams = (query) => {
-    const { type, category, summ, comments, date } = query;
+const { type, category, summ, comments, date } = query;
 
-    const parsedCategory = parseCategoryOrType(category);
-    const parsedType = parseCategoryOrType(type);
-    const parsedNumber = parseNumber(summ);
+const parsedType = parseCategoryOrType(type);
+const parsedCategory = parseCategoryOrType(category);
+const parsedNumber = parseNumber(summ);
 
-    return {
-        category: parsedCategory,
-        type: parsedType,
-        summ: parsedNumber
+return {
+    type: parsedType,
+    category: parsedCategory,
+    summ: parsedNumber
     };
 };

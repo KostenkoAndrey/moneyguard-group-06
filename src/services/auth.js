@@ -33,7 +33,7 @@ export async function loginUser(email, password) {
         accessToken: crypto.randomBytes(30).toString('base64'),
         // refreshToken: crypto.randomBytes(30).toString('base64'),
         refreshToken: "refreshToken",
-        accessTokenValidUntil: new Date(Date.now() + 150 * 60 * 1000), // 15 хвилин
+        accessTokenValidUntil: new Date(Date.now() + 24 * 60 * 60 * 1000), // 15 хвилин
         refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 днів
     });
 }
@@ -82,4 +82,3 @@ export async function getUserInfo(sessionId, refreshToken,) {
     const user = await User.findOne({ _id: currentSession.userId });
     return user;
 };
-//

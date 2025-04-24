@@ -7,13 +7,17 @@
   "scripts": {
     "lint": "eslint src/**/*.js",
     "start": "node ./src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "build": "npm run build-docs",
+    "build-docs": "redocly bundle docs/openapi.yaml --ext json -o docs/swagger.json",
+    "preview-docs": "redocly preview-docs"
   },
   "keywords": [],
   "author": "Andrii Kostenko <kostenkoandrey14@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.24.0",
+    "@redocly/cli": "^1.34.2",
     "eslint": "^9.24.0",
     "globals": "^16.0.0",
     "nodemon": "^3.1.9",
@@ -28,6 +32,7 @@
     "http-errors": "^2.0.0",
     "joi": "^17.13.3",
     "mongoose": "^8.13.2",
-    "pino-http": "^10.4.0"
+    "pino-http": "^10.4.0",
+    "swagger-ui-express": "^5.0.1"
   }
 }
