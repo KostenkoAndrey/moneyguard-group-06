@@ -1,0 +1,29 @@
+description: Bad Request
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - status
+        - message
+        - data
+      properties:
+        status:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: ValidationError
+        data:
+          type: object
+          required:
+            - message
+          properties:
+            message:
+              type: string
+              example: "Error creating contact."
+    example:
+      status: 400
+      message: Error creating contact.
+      data:
+        message: Bad Request

@@ -1,0 +1,15 @@
+description: Transactions or collection not found
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Transaction or collection not found.
