@@ -1,5 +1,4 @@
 import createHttpError from 'http-errors';
-import mongoose from 'mongoose';
 
 import { getAllTransactions, getTransactionsById, createTransaction, deleteTransaction, updateTransaction } from '../services/transactions.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
@@ -29,7 +28,6 @@ export const getTransactionsController = async (req, res) => {
 };
 
 
-//** get transaction by id   */
 export const getTransactionByIdController = async (req, res, next) => {
     const { transactionId } = req.params;
     const transaction = await getTransactionsById( transactionId, req.user.id );
@@ -44,9 +42,7 @@ export const getTransactionByIdController = async (req, res, next) => {
 };
 
 
-//** create transaction   */
 export const createTransactionController = async (req, res) => {
-    console.log('req.user:', req.user);
     const transaction = await createTransaction(req.body, req.user.id);
 
     res.status(201).json({

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   version: 1.0.0
-  title: Transactions app
+  title: Money Guard app
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -15,8 +15,8 @@ tags:
   - name: Transactions
     description: Operations about transactions.
 servers:
-  - url: http://localhost:3000
-  - url: https://moneyguard-group-06.onrender.com
+  - url: 'https://moneyguard-group-06.onrender.com'
+  - url: 'http://localhost:3000'
 paths:
   /auth/register:
     post:
@@ -27,21 +27,16 @@ paths:
   /auth/logout:
     post:
       $ref: ../swagger/paths/auth/logout.yaml
-  /auth/refresh:
-    post:
-      $ref: ../swagger/paths/auth/refresh.yaml
   /transactions:
-    post:
-      $ref: ../swagger/paths/transactions/post.yaml
     get:
       $ref: ../swagger/paths/transactions/get.yaml
+    post:
+      $ref: ../swagger/paths/transactions/post.yaml
   /transactions/{id}:
-    get:
-      $ref: ../swagger/paths/transactions/{id}/get.yaml
-    delete:
-      $ref: ../swagger/paths/transactions/{id}/delete.yaml
     patch:
       $ref: ../swagger/paths/transactions/{id}/patch.yaml
+    delete:
+      $ref: ../swagger/paths/transactions/{id}/delete.yaml
 components:
   securitySchemes:
     bearerAuth:

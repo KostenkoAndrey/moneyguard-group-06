@@ -21,7 +21,11 @@ export const startServer = () => {
   app.use(express.json({
     type: ['application/json', 'application/vnd.api+json'],
   }));
-  app.use(cors());
+
+  app.use(cors({
+    origin: [ 'http://localhost:3000', 'https://moneyguard-group-06.onrender.com' ],
+    credentials: true,
+  }));
 
   app.use(
     pino({

@@ -6,6 +6,5 @@ const { transactionId } = req.params;
 if (!isValidObjectId(transactionId)) {
     throw createHttpError(400, 'Bad Request');
 };
-
 next();
 };
