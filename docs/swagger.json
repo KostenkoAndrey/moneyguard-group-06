@@ -15,6 +15,7 @@
     },
     {
       "url": "http://localhost:3000"
+
     }
   ],
   "tags": [
@@ -247,6 +248,7 @@
         }
       }
     },
+<<<<<<< HEAD
     "/transactions": {
       "get": {
         "tags": [
@@ -255,11 +257,22 @@
         "summary": "Get list of transactions",
         "operationId": "getTransactions",
         "description": "Get list of transactions",
+=======
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Refresh user",
+        "operationId": "Refresh",
+        "description": "Refresh user",
+>>>>>>> origin/main
         "security": [
           {
             "bearerAuth": []
           }
         ],
+<<<<<<< HEAD
         "parameters": [
           {
             "in": "query",
@@ -368,6 +381,31 @@
         "responses": {
           "200": {
             "description": "Successfully found transactions!",
+=======
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "refreshToken"
+                ],
+                "properties": {
+                  "refreshToken": {
+                    "description": "Refresh token",
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token successfully refreshed",
+>>>>>>> origin/main
             "content": {
               "application/json": {
                 "schema": {
@@ -384,6 +422,7 @@
                     },
                     "message": {
                       "type": "string",
+<<<<<<< HEAD
                       "example": "Successfully found transactions!"
                     },
                     "data": {
@@ -427,6 +466,16 @@
                         "hasPreviousPage": {
                           "type": "boolean",
                           "example": false
+=======
+                      "example": "Token refreshed successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+>>>>>>> origin/main
                         }
                       }
                     }
@@ -438,20 +487,33 @@
           "401": {
             "$ref": "#/components/responses/401"
           },
+<<<<<<< HEAD
           "404": {
             "$ref": "#/components/responses/tx_404"
           },
+=======
+>>>>>>> origin/main
           "500": {
             "$ref": "#/components/responses/500"
           }
         }
+<<<<<<< HEAD
       },
+=======
+      }
+    },
+    "/transactions": {
+>>>>>>> origin/main
       "post": {
         "tags": [
           "Transactions"
         ],
         "summary": "Create transaction",
+<<<<<<< HEAD
         "operationId": "createTransaction",
+=======
+        "operationId": "createtTransaction",
+>>>>>>> origin/main
         "description": "Create a transaction with payload",
         "security": [
           {
@@ -466,11 +528,16 @@
                 "required": [
                   "type",
                   "category",
+<<<<<<< HEAD
                   "sum",
+=======
+                  "summ",
+>>>>>>> origin/main
                   "date"
                 ],
                 "properties": {
                   "type": {
+<<<<<<< HEAD
                     "type": "string",
                     "example": "expenses",
                     "description": "Transaction's type"
@@ -486,13 +553,36 @@
                     "description": "Transaction's amount"
                   },
                   "comment": {
+=======
+                    "description": "Transaction's type",
+                    "type": "string",
+                    "example": "+"
+                  },
+                  "category": {
+                    "description": "Transaction's category",
+                    "type": "string",
+                    "example": "products"
+                  },
+                  "summ": {
+                    "description": "Transaction's amount",
+                    "type": "number",
+                    "example": 100.7
+                  },
+                  "comments": {
+>>>>>>> origin/main
                     "type": "string",
                     "example": "Optional note about the transaction"
                   },
                   "date": {
+<<<<<<< HEAD
                     "type": "string",
                     "example": "2020-02-20T00:00:00.000Z",
                     "description": "Creation date"
+=======
+                    "description": "Creation date",
+                    "type": "string",
+                    "example": "2020-02-20T00:00:00.000Z"
+>>>>>>> origin/main
                   }
                 }
               }
@@ -748,7 +838,6 @@
             "description": "Transaction's category",
             "type": "string",
             "enum": [
-              "income",
               "main expenses",
               "products",
               "car",

@@ -66,3 +66,4 @@ responses:
     $ref: '../../../components/responses/transactions/tx_404.yaml'
   '500':
     $ref: '../../../components/responses/500.yaml'
+

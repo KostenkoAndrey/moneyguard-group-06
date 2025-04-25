@@ -12,12 +12,14 @@ parameters:
       type: integer
       example: 1
     description: Page number for pagination
+
   - in: query
     name: perPage
     schema:
       type: integer
       example: 10
     description: Number of items per page
+
   - in: query
     name: sortBy
     schema:
@@ -25,6 +27,7 @@ parameters:
       enum: ['_id', 'type', 'category', 'sum', 'comment', 'date']
       example: '_id'
     description: 'Default value - _id'
+
   - in: query
     name: sortOrder
     schema:
@@ -32,6 +35,7 @@ parameters:
       enum: ['asc', 'desc']
       example: 'asc'
     description: 'Sorting order: "asc" for ascending, "desc" for descending'
+
   - in: query
     name: type
     schema:
