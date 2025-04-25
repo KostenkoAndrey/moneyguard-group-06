@@ -8,6 +8,7 @@ import { getEnvVar } from './utils/getEnvVar.js';
 import indexRouter from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 dotenv.config();
 const PORT = Number(getEnvVar('PORT', '3000'));
@@ -15,11 +16,16 @@ const PORT = Number(getEnvVar('PORT', '3000'));
 export const startServer = () => {
   const app = express();
   app.use(cookieParser());
+  app.use('/api-docs', swaggerDocs());
 
   app.use(express.json({
     type: ['application/json', 'application/vnd.api+json'],
   }));
-  app.use(cors());
+
+  app.use(cors({
+    origin: [ 'http://localhost:3000', 'https://moneyguard-group-06.onrender.com' ],
+    credentials: true,
+  }));
 
   app.use(
     pino({

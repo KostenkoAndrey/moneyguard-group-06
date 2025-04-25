@@ -4,12 +4,13 @@ const transactionsSchema = new Schema(
     {
         type: {
             type: String,
-            enum: ['+', '-'],
+            enum: ['income', 'expenses'],
             required: true,
         },
         category: {
             type: String,
             enum: [
+                'income',
                 'main expenses',
                 'products',
                 'car',
@@ -23,12 +24,12 @@ const transactionsSchema = new Schema(
             ],
             required: true,
         },
-        summ: {
+        sum: {
             type: Number,
-            required: true,
-            min: 0
+            default: 0,
+            required: true
         },
-        comments: {
+        comment: {
             type: String,
             trim: true
         },

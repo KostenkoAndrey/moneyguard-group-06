@@ -1,41 +1,36 @@
-const allowedCategories = [
-    'main expenses',
-    'products',
-    'car',
-    'self care',
-    'child care',
-    'household products',
-    'education',
-    'leisure',
-    'entertainment',
-    'other expenses'
-];
+import { ALLOWED_CATEGORIES, ALLOWED_TYPES } from '../constants/index.js';
 
-const allowedTypes = ['+', '-'];
+const parseType = (value) => {
+  if (typeof value !== 'string' || value.trim() === '') return;
+  const normalized = value.trim().toLowerCase();
+  if (ALLOWED_TYPES.includes(normalized)) return normalized;
+};
 
-const parseCategoryOrType = (value) => {
-if (typeof value !== 'string' || value.trim() === '') return;
-if (allowedCategories.includes(value)) return value;
-if (allowedTypes.includes(value)) return value;
+const parseCategory = (value) => {
+  if (typeof value !== 'string' || value.trim() === '') return;
+  const normalized = value.trim().toLowerCase();
+  if (ALLOWED_CATEGORIES.includes(normalized)) return normalized;
 };
 
 const parseNumber = (number) => {
-if (typeof number !== 'string' || number.trim() === '') return;
-const parsedNumber = parseFloat(number);
-if (Number.isNaN(parsedNumber)) return;
-return parsedNumber;
+  if (typeof number !== 'string' || number.trim() === '') return;
+  const parsedNumber = parseFloat(number);
+  if (Number.isNaN(parsedNumber)) return;
+  return parsedNumber;
 };
 
 export const parseFilterParams = (query) => {
-    const { type, category, summ, comments, date } = query;
+  const { type, category, minSum, maxSum } = query;
 
-    const parsedCategory = parseCategoryOrType(category);
-    const parsedType = parseCategoryOrType(type);
-    const parsedNumber = parseNumber(summ);
+  const parsedType = parseType(type);
+  const parsedCategory = parseCategory(category);
+  const parsedMinSum = parseNumber(minSum);
+  const parsedMaxSum = parseNumber(maxSum);
 
-    return {
-        category: parsedCategory,
-        type: parsedType,
-        summ: parsedNumber
-    };
+  return {
+    type: parsedType,
+    category: parsedCategory,
+    minSum: parsedMinSum,
+    maxSum: parsedMaxSum,
+  };
 };

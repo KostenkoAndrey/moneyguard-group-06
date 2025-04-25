@@ -1,7 +1,9 @@
-import { transactionsCollection } from '../db/models/transactions.js';
-import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
-
+import { transactionsCollection } from '../db/models/transactions.js';
+import { User } from '../db/models/user.js';
+import { calculatePaginationData } from '../utils/calculatePaginationData.js';
+import { validateTransactionPayload } from '../utils/validateTransactionPayload.js';
+import { updateBalanceOnCreate, updateBalanceOnDelete, updateBalanceOnUpdate } from '../utils/balanceUtils.js';
 
 export const getAllTransactions = async ({
   page,
@@ -14,22 +16,38 @@ export const getAllTransactions = async ({
 
   const limit = perPage;
   const skip = (page - 1) * perPage;
-  const transactionsQuery = transactionsCollection.find({ userId });
+
+  const queryObject = { userId };
 
   if (filter.type) {
-    transactionsQuery.where('type').equals(filter.type);
+    queryObject.type = filter.type;
   }
 
   if (filter.category) {
-    transactionsQuery.where('category').equals(filter.category);
+    queryObject.category = filter.category;
   }
 
-  const [ transactionsCount, transactions ] = await Promise.all([
-  transactionsCollection.find().merge(transactionsQuery).countDocuments(),
-  transactionsQuery.skip(skip).limit(limit).sort({ [sortBy]: sortOrder }).exec()]);
+  if (filter.minSum || filter.maxSum) {
+    queryObject.sum = {};
+    if (filter.minSum) queryObject.sum.$gte = filter.minSum;
+    if (filter.maxSum) queryObject.sum.$lte = filter.maxSum;
+  }
 
+  const [transactionsCount, transactions] = await Promise.all([
+    transactionsCollection.find(queryObject).countDocuments(),
+    transactionsCollection
+      .find(queryObject)
+      .skip(skip)
+      .limit(limit)
+      .sort({ [sortBy]: sortOrder })
+      .exec(),
+  ]);
 
-  const paginationData = calculatePaginationData(transactionsCount, perPage, page);
+  const paginationData = calculatePaginationData(
+    transactionsCount,
+    perPage,
+    page,
+  );
 
   return {
     data: transactions,
@@ -37,41 +55,58 @@ export const getAllTransactions = async ({
   };
 };
 
-
-export const getTransactionsById = async (transactionId) => {
-  console.log(transactionId);
-
-  const transaction = await transactionsCollection.findById(transactionId);
+export const getTransactionsById = async (transactionId, userId) => {
+  const transaction = await transactionsCollection.findById({
+    _id: transactionId,
+    userId,
+  });
   return transaction;
 };
 
+export const createTransaction = async (payload, userId) => {
+  validateTransactionPayload(payload);
+  const user = await User.findById(userId);
 
-export const createTransaction = async (payload) => {
-  const transaction = await transactionsCollection.create(payload);
+  updateBalanceOnCreate(user, payload.sum, payload.type);
+  const transaction = await transactionsCollection.create({
+    ...payload,
+    userId,
+  });
+  await user.save();
+
   return transaction;
 };
 
-
-export const deleteTransaction = async (transactionId) => {
+export const deleteTransaction = async (transactionId, userId) => {
+  const user = await User.findById(userId);
   const transaction = await transactionsCollection.findOneAndDelete({
     _id: transactionId,
+    userId,
   });
+  if (!transaction || !user) return null;
+
+  updateBalanceOnDelete(user, transaction);
+  await user.save();
 
   return transaction;
 };
 
-export const updateTransaction = async (transactionId, payload, options = {}) => {
+export const updateTransaction = async (filter, payload, options = {}) => {
+  validateTransactionPayload(payload);
+  const user = await User.findById(filter.userId);
+  const transaction = await transactionsCollection.findOne(filter);
+  if (!transaction || !user) return null;
+
+  updateBalanceOnUpdate(user, transaction, payload.sum);
+
   const rawResult = await transactionsCollection.findOneAndUpdate(
-    { _id: transactionId },
+    filter,
     payload,
-    {
-      new: true,
-      includeResultMetadata: true,
-      ...options,
-    },
+    { new: true, includeResultMetadata: true, ...options },
   );
 
   if (!rawResult || !rawResult.value) return null;
+  await user.save();
 
   return {
     transaction: rawResult.value,

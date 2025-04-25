@@ -1,0 +1,68 @@
+tags:
+  - Transactions
+summary: Patch transaction by id
+operationId: PatchTransactions
+description: 'Patch transaction by id'
+security:
+  - bearerAuth: []
+parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        example: '65ca67e7ae7f10c88b598384'
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          type:
+            type: string
+            example: 'expenses'
+            description: "Transaction's type"
+          category:
+            type: string
+            example: "products"
+            description: "Transaction's category"
+          sum:
+            type: number
+            example: 888.88
+            description: "Transaction's amount"
+          comment:
+            type: string
+            example: "Optional note about the transaction"
+          date:
+            type: string
+            example: '2020-02-20T00:00:00.000Z'
+            description: "Creation date"
+responses:
+  '200':
+    description: Successfully updated transaction
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully updated transaction!
+            data:
+              type: object
+              $ref: '../../../components/schemas/transactions.yaml'
+  '400':
+    $ref: '../../../components/responses/transactions/tx_400.yaml'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '404':
+    $ref: '../../../components/responses/transactions/tx_404.yaml'
+  '500':
+    $ref: '../../../components/responses/500.yaml'
