@@ -23,7 +23,10 @@ export const startServer = () => {
   }));
 
   app.use(cors({
-    origin: [ 'http://localhost:3000', 'https://moneyguard-group-06.onrender.com' ],
+    origin: [ 'http://localhost:3000',
+      'http://localhost:5173',
+      'https://moneyguard-group-06.onrender.com'
+    ],
     credentials: true,
   }));
 
