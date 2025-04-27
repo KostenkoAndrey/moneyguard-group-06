@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "version": "1.0.0",
-    "title": "Transactions app",
+    "title": "Money Guard app",
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -11,10 +11,10 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
+      "url": "https://moneyguard-group-06.onrender.com"
     },
     {
-      "url": "https://moneyguard-group-06.onrender.com"
+      "url": "http://localhost:3000"
     }
   ],
   "tags": [
@@ -247,178 +247,7 @@
         }
       }
     },
-    "/auth/refresh": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Refresh user",
-        "operationId": "Refresh",
-        "description": "Refresh user",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "refreshToken"
-                ],
-                "properties": {
-                  "refreshToken": {
-                    "description": "Refresh token",
-                    "type": "string",
-                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Token successfully refreshed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Token refreshed successfully"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "accessToken": {
-                          "type": "string",
-                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
     "/transactions": {
-      "post": {
-        "tags": [
-          "Transactions"
-        ],
-        "summary": "Create transaction",
-        "operationId": "createtTransaction",
-        "description": "Create a transaction with payload",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "type",
-                  "category",
-                  "summ",
-                  "date"
-                ],
-                "properties": {
-                  "type": {
-                    "description": "Transaction's type",
-                    "type": "string",
-                    "example": "+"
-                  },
-                  "category": {
-                    "description": "Transaction's category",
-                    "type": "string",
-                    "example": "products"
-                  },
-                  "summ": {
-                    "description": "Transaction's amount",
-                    "type": "number",
-                    "example": 100.7
-                  },
-                  "comments": {
-                    "type": "string",
-                    "example": "Optional note about the transaction"
-                  },
-                  "date": {
-                    "description": "Creation date",
-                    "type": "string",
-                    "example": "2020-02-20T00:00:00.000Z"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Creates a transaction.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 201
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Successfully created a transaction!"
-                    },
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/transactions"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/tx_post_400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      },
       "get": {
         "tags": [
           "Transactions"
@@ -436,9 +265,10 @@
             "in": "query",
             "name": "page",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "example": 1
             },
-            "example": 1
+            "description": "Page number for pagination"
           },
           {
             "in": "query",
@@ -446,7 +276,8 @@
             "schema": {
               "type": "integer",
               "example": 10
-            }
+            },
+            "description": "Number of items per page"
           },
           {
             "in": "query",
@@ -457,11 +288,11 @@
                 "_id",
                 "type",
                 "category",
-                "summ",
-                "comments",
+                "sum",
+                "comment",
                 "date"
               ],
-              "example": "summ"
+              "example": "_id"
             },
             "description": "Default value - _id"
           },
@@ -475,7 +306,8 @@
                 "desc"
               ],
               "example": "asc"
-            }
+            },
+            "description": "Sorting order: \"asc\" for ascending, \"desc\" for descending"
           },
           {
             "in": "query",
@@ -483,11 +315,12 @@
             "schema": {
               "type": "string",
               "enum": [
-                "+",
-                "-"
+                "income",
+                "expenses"
               ],
-              "example": "+"
-            }
+              "example": "income"
+            },
+            "description": "Filter by transaction type"
           },
           {
             "in": "query",
@@ -495,6 +328,7 @@
             "schema": {
               "type": "string",
               "enum": [
+                "income",
                 "main expenses",
                 "products",
                 "car",
@@ -507,12 +341,33 @@
                 "other expenses"
               ],
               "example": "main expenses"
-            }
+            },
+            "description": "Filter by transaction category"
+          },
+          {
+            "in": "query",
+            "name": "minSum",
+            "schema": {
+              "type": "number",
+              "minimum": 0,
+              "example": 0
+            },
+            "description": "Minimum transaction amount for filtering"
+          },
+          {
+            "in": "query",
+            "name": "maxSum",
+            "schema": {
+              "type": "number",
+              "maximum": 1000000,
+              "example": 10000
+            },
+            "description": "Maximum transaction amount for filtering"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully found students!",
+            "description": "Successfully found transactions!",
             "content": {
               "application/json": {
                 "schema": {
@@ -559,19 +414,19 @@
                         },
                         "totalItems": {
                           "type": "number",
-                          "example": 10
+                          "example": 20
                         },
                         "totalPages": {
                           "type": "number",
-                          "example": 1
+                          "example": 2
                         },
                         "hasNextPage": {
                           "type": "boolean",
-                          "example": false
+                          "example": true
                         },
                         "hasPreviousPage": {
                           "type": "boolean",
-                          "example": true
+                          "example": false
                         }
                       }
                     }
@@ -590,16 +445,110 @@
             "$ref": "#/components/responses/500"
           }
         }
-      }
-    },
-    "/transactions/{id}": {
-      "get": {
+      },
+      "post": {
         "tags": [
           "Transactions"
         ],
-        "summary": "Get transaction by id",
-        "operationId": "getTransaction",
-        "description": "Get transaction by id",
+        "summary": "Create transaction",
+        "operationId": "createTransaction",
+        "description": "Create a transaction with payload",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "category",
+                  "sum",
+                  "date"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "expenses",
+                    "description": "Transaction's type"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "products",
+                    "description": "Transaction's category"
+                  },
+                  "sum": {
+                    "type": "number",
+                    "example": 888.88,
+                    "description": "Transaction's amount"
+                  },
+                  "comment": {
+                    "type": "string",
+                    "example": "Optional note about the transaction"
+                  },
+                  "date": {
+                    "type": "string",
+                    "example": "2020-02-20T00:00:00.000Z",
+                    "description": "Creation date"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Creates a transaction.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully created a transaction!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/transactions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/tx_post_400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/transactions/{id}": {
+      "patch": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Patch transaction by id",
+        "operationId": "PatchTransactions",
+        "description": "Patch transaction by id",
         "security": [
           {
             "bearerAuth": []
@@ -616,9 +565,44 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "expenses",
+                    "description": "Transaction's type"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "products",
+                    "description": "Transaction's category"
+                  },
+                  "sum": {
+                    "type": "number",
+                    "example": 888.88,
+                    "description": "Transaction's amount"
+                  },
+                  "comment": {
+                    "type": "string",
+                    "example": "Optional note about the transaction"
+                  },
+                  "date": {
+                    "type": "string",
+                    "example": "2020-02-20T00:00:00.000Z",
+                    "description": "Creation date"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Get transaction by id",
+            "description": "Successfully updated transaction",
             "content": {
               "application/json": {
                 "schema": {
@@ -635,7 +619,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully found transaction with id 65ca67e7ae7f10c88b598384!"
+                      "example": "Successfully updated transaction!"
                     },
                     "data": {
                       "type": "object",
@@ -700,108 +684,6 @@
             "$ref": "#/components/responses/500"
           }
         }
-      },
-      "patch": {
-        "tags": [
-          "Transactions"
-        ],
-        "summary": "Patch transaction by id",
-        "operationId": "PatchTransactions",
-        "description": "Patch transaction by id",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "65ca67e7ae7f10c88b598384"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "description": "Transaction's type",
-                    "type": "string",
-                    "example": "+"
-                  },
-                  "category": {
-                    "description": "Transaction's category",
-                    "type": "string",
-                    "example": "products"
-                  },
-                  "summ": {
-                    "description": "Transaction's amount",
-                    "type": "number",
-                    "example": 100.7
-                  },
-                  "comments": {
-                    "type": "string",
-                    "example": "Optional note about the transaction"
-                  },
-                  "date": {
-                    "description": "Creation date",
-                    "type": "string",
-                    "example": "2020-02-20T00:00:00.000Z"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "400": {
-              "$ref": "../../../components/responses/transactions/tx_400.yaml"
-            },
-            "401": {
-              "$ref": "../../../components/responses/401.yaml"
-            },
-            "404": {
-              "$ref": "../../../components/responses/transactions/tx_404.yaml"
-            },
-            "500": {
-              "$ref": "../../../components/responses/500.yaml"
-            },
-            "description": "Successfully updated transaction",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Successfully updated a transaction!"
-                    },
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/transactions"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   },
@@ -844,7 +726,7 @@
           "_id",
           "type",
           "category",
-          "summ",
+          "sum",
           "date"
         ],
         "properties": {
@@ -857,15 +739,16 @@
             "description": "Transaction's type",
             "type": "string",
             "enum": [
-              "+",
-              "-"
+              "income",
+              "expenses"
             ],
-            "example": "+"
+            "example": "expenses"
           },
           "category": {
             "description": "Transaction's category",
             "type": "string",
             "enum": [
+              "income",
               "main expenses",
               "products",
               "car",
@@ -879,13 +762,13 @@
             ],
             "example": "products"
           },
-          "summ": {
+          "sum": {
             "description": "Transaction's amount",
             "type": "number",
             "example": 888.88
           },
-          "comments": {
-            "description": "Transaction's comments",
+          "comment": {
+            "description": "Transaction's comment",
             "type": "string",
             "example": "Some comments"
           },
@@ -894,10 +777,10 @@
             "format": "date-time",
             "example": "2020-02-20T00:00:00.000Z"
           },
-          "parentId": {
-            "description": "Transaction's parent id",
+          "userId": {
             "type": "string",
-            "example": "65e4decdd286b30065d54af9"
+            "description": "Parent's id",
+            "example": "65e4decdd286b30065d54aw2"
           }
         }
       }

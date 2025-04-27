@@ -3,7 +3,7 @@ required:
   - _id
   - type
   - category
-  - summ
+  - sum
   - date
 properties:
   _id:
@@ -13,12 +13,13 @@ properties:
   type:
     description: "Transaction's type"
     type: string
-    enum: ['+', '-']
-    example: '+'
+    enum: ['income', 'expenses']
+    example: 'expenses'
   category:
     description: "Transaction's category"
     type: string
     enum: [
+            'income',
             'main expenses',
             'products',
             'car',
@@ -31,19 +32,20 @@ properties:
             'other expenses',
             ]
     example: "products"
-  summ:
+  sum:
     description: "Transaction's amount"
     type: number
     example: 888.88
-  comments:
-    description: "Transaction's comments"
+  comment:
+    description: "Transaction's comment"
     type: string
     example: "Some comments"
   date:
     description: 'Creation date'
     format: date-time
     example: '2020-02-20T00:00:00.000Z'
-  parentId:
-    description: "Transaction's parent id"
+  userId:
     type: string
-    example: 65e4decdd286b30065d54af9
+    description: "Parent's id"
+    example: 65e4decdd286b30065d54aw2
+

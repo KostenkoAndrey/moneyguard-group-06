@@ -10,40 +10,76 @@ parameters:
     name: page
     schema:
       type: integer
-    example: 1
+      example: 1
+    description: Page number for pagination
+
   - in: query
     name: perPage
     schema:
       type: integer
       example: 10
+    description: Number of items per page
+
   - in: query
     name: sortBy
     schema:
       type: string
-      enum: [ '_id', 'type', 'category', 'summ', 'comments', 'date' ]
-      example: 'summ'
-    description: "Default value - _id"
+      enum: ['_id', 'type', 'category', 'sum', 'comment', 'date']
+      example: '_id'
+    description: 'Default value - _id'
+
   - in: query
     name: sortOrder
     schema:
       type: string
       enum: ['asc', 'desc']
       example: 'asc'
+    description: 'Sorting order: "asc" for ascending, "desc" for descending'
+
   - in: query
     name: type
     schema:
       type: string
-      enum: ['+', '-']
-      example: "+"
+      enum: ['income', 'expenses']
+      example: 'income'
+    description: 'Filter by transaction type'
   - in: query
     name: category
     schema:
       type: string
-      enum: [ 'main expenses', 'products', 'car', 'self care', 'child care', 'household products', 'education', 'leisure', 'entertainment', 'other expenses' ]
-      example: "main expenses"
+      enum:
+        [
+          'income',
+          'main expenses',
+          'products',
+          'car',
+          'self care',
+          'child care',
+          'household products',
+          'education',
+          'leisure',
+          'entertainment',
+          'other expenses',
+        ]
+      example: 'main expenses'
+    description: 'Filter by transaction category'
+  - in: query
+    name: minSum
+    schema:
+      type: number
+      minimum: 0
+      example: 0
+    description: 'Minimum transaction amount for filtering'
+  - in: query
+    name: maxSum
+    schema:
+      type: number
+      maximum: 1000000
+      example: 10000
+    description: 'Maximum transaction amount for filtering'
 responses:
   '200':
-    description: Successfully found students!
+    description: Successfully found transactions!
     content:
       application/json:
         schema:
@@ -82,20 +118,19 @@ responses:
                   example: 10
                 totalItems:
                   type: number
-                  example: 10
+                  example: 20
                 totalPages:
                   type: number
-                  example: 1
+                  example: 2
                 hasNextPage:
                   type: boolean
-                  example: false
+                  example: true
                 hasPreviousPage:
                   type: boolean
-                  example: true
+                  example: false
   '401':
     $ref: '../../components/responses/401.yaml'
   '404':
     $ref: '../../components/responses/transactions/tx_404.yaml'
   '500':
     $ref: '../../components/responses/500.yaml'
-

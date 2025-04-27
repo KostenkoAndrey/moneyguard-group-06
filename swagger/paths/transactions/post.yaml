@@ -1,7 +1,7 @@
 tags:
   - Transactions
 summary: Create transaction
-operationId: createtTransaction
+operationId: createTransaction
 description: 'Create a transaction with payload'
 security:
   - bearerAuth: []
@@ -13,28 +13,28 @@ requestBody:
         required:
           - type
           - category
-          - summ
+          - sum
           - date
         properties:
           type:
-            description: "Transaction's type"
             type: string
-            example: '+'
+            example: 'expenses'
+            description: "Transaction's type"
           category:
-            description: "Transaction's category"
             type: string
             example: "products"
-          summ:
-            description: "Transaction's amount"
+            description: "Transaction's category"
+          sum:
             type: number
-            example: 100.70
-          comments:
+            example: 888.88
+            description: "Transaction's amount"
+          comment:
             type: string
             example: "Optional note about the transaction"
           date:
-            description: "Creation date"
             type: string
             example: '2020-02-20T00:00:00.000Z'
+            description: "Creation date"
 responses:
   '201':
     description: Creates a transaction.
