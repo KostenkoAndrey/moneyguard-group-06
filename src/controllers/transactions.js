@@ -1,6 +1,4 @@
 import createHttpError from 'http-errors';
-import mongoose from 'mongoose';
-
 import { getAllTransactions, getTransactionsById, createTransaction, deleteTransaction, updateTransaction } from '../services/transactions.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
@@ -32,7 +30,7 @@ export const getTransactionsController = async (req, res) => {
 //** get transaction by id   */
 export const getTransactionByIdController = async (req, res, next) => {
     const { transactionId } = req.params;
-    const transaction = await getTransactionsById( transactionId, req.user.id );
+    const transaction = await getTransactionsById(transactionId, req.user.id);
 
     if (!transaction) throw createHttpError(404, 'Transaction not found');
 
@@ -61,7 +59,7 @@ export const createTransactionController = async (req, res) => {
 export const deleteTransactionController = async (req, res, next) => {
     const { transactionId } = req.params;
 
-    const transaction = await deleteTransaction( transactionId, req.user.id);
+    const transaction = await deleteTransaction(transactionId, req.user.id);
 
     if (!transaction) return next(createHttpError(404, 'Transaction not found'));
 
@@ -71,14 +69,14 @@ export const deleteTransactionController = async (req, res, next) => {
 
 //** upsert transaction   */
 export const upsertTransactionController = async (req, res, next) => {
-const { transactionId } = req.params;
-const filter = { _id: transactionId, userId: req.user.id };
+    const { transactionId } = req.params;
+    const filter = { _id: transactionId, userId: req.user.id };
 
-const result = await updateTransaction( filter, req.body, { upsert: true });
+    const result = await updateTransaction(filter, req.body, { upsert: true });
 
-if (!result) return next(createHttpError(404, 'Transaction not found'));
+    if (!result) return next(createHttpError(404, 'Transaction not found'));
 
-const status = result.isNew ? 201 : 200;
+    const status = result.isNew ? 201 : 200;
 
     res.status(status).json({
         status,
@@ -90,9 +88,9 @@ const status = result.isNew ? 201 : 200;
 
 //** patch transaction   */
 export const patchTransactionController = async (req, res, next) => {
-const { transactionId } = req.params;
-const filter = { _id: transactionId, userId: req.user.id };
-const result = await updateTransaction( filter, req.body, { upsert: true });
+    const { transactionId } = req.params;
+    const filter = { _id: transactionId, userId: req.user.id };
+    const result = await updateTransaction(filter, req.body, { upsert: true });
 
     if (!result) {
         next(createHttpError(404, 'Transaction not found'));
