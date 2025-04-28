@@ -1,16 +1,40 @@
-import { User } from '../db/models/user.js';
+import * as fs from 'fs/promises';
+import path from 'node:path';
 import {
     registerUser,
     loginUser,
     logoutUser,
     refreshSession,
-    getUserInfo
+    getUserInfo,
+    requestPasswordReset,
+    resetPassword,
+    updateContact
 } from "../services/auth.js";
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
+import { getEnvVar } from '../utils/getEnvVar.js';
 
 
 //** register user   */
 export async function registerController(req, res) {
-    const user = await registerUser(req.body);
+    let photo = null;
+
+    if (req.file) {
+        if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+            const result = await uploadToCloudinary(req.file.path);
+            photo = result.secure_url;
+        }
+        else {
+            await fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
+            photo = `http://localhost:3000/uploads/${req.file.filename}`;
+        }
+    }
+
+    const tempData = {
+        ...req.body,
+        photo
+    };
+
+    const user = await registerUser(tempData);
     res.status(201).json({
         status: 201,
         message: "Successfully registered a user!",
@@ -22,7 +46,7 @@ export async function registerController(req, res) {
 //** login user  */
 export async function loginController(req, res) {
     await loginUser(req.body.email, req.body.password);
-
+    console.log('+++++++++req.body++++++++', req.body);
     const session = await loginUser(req.body.email, req.body.password);
 
     res.cookie("sessionId", session._id, {
@@ -35,6 +59,7 @@ export async function loginController(req, res) {
     });
 
     const { name, email, balance } = await getUserInfo(session._id, session.refreshToken);
+
     res.status(200).json({
         status: 200,
         message: "User logged in successfully",
@@ -42,7 +67,6 @@ export async function loginController(req, res) {
     },
     );
 }
-
 
 
 //** logout user  */
@@ -96,5 +120,49 @@ export async function userInfoController(req, res) {
         message: "Successfully found user info!",
         data: temp,
     });
-};
+}
 
+
+//** request password reset   */
+export async function requestPasswordResetController(req, res) {
+    const { email } = req.body;
+    await requestPasswordReset(email);
+    res.json({ status: 200, message: "Reset password email has been successfully sent.", data: {} });
+}
+
+
+//** reset password   */
+export async function resetPasswordController(req, res) {
+    const { token, password } = req.body;
+    await resetPassword(token, password);
+    res.json({ status: 200, message: "Password has been successfully reset.", data: {} });
+}
+
+
+//** update userInfo (PATCH)   */
+export async function updateUserSchemaController(req, res) {
+    let photo = null;
+    if (req.file) {
+        if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+            const result = await uploadToCloudinary(req.file.path);
+            photo = result.secure_url;
+        }
+        else {
+            await fs.rename(req.file.path, path.resolve('src', 'uploads', req.file.filename));
+            photo = `http://localhost:3000/uploads/${req.file.filename}`;
+        }
+    }
+    const tmpUsInf = await getUserInfo(req.cookies.sessionId, req.cookies.refreshToken);
+    const userId = tmpUsInf._id;
+    const contact = req.body;
+    const result = await updateContact(
+        userId,
+        contact,
+        photo);
+
+    res.status(200).json({
+        status: 200,
+        message: "Successfully updated a user!",
+        data: { result },
+    });
+}

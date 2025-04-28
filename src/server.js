@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'node:path';
 import pino from 'pino-http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -15,6 +16,7 @@ const PORT = Number(getEnvVar('PORT', '3000'));
 
 export const startServer = () => {
   const app = express();
+  app.use('/uploads', express.static(path.resolve('src', 'uploads')));
   app.use(cookieParser());
   app.use('/api-docs', swaggerDocs());
 
