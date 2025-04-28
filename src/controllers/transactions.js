@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
 
-import { getAllTransactions, getTransactionsById, createTransaction, deleteTransaction, updateTransaction } from '../services/transactions.js';
+import { getAllTransactions, getTransactionsById, createTransaction, deleteTransaction, updateTransaction, summaryBycategories  } from '../services/transactions.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
@@ -101,3 +101,14 @@ const result = await updateTransaction( filter, req.body, { upsert: true });
         data: result.transaction,
     });
 };
+
+
+export const categoriesController = async (req, res, next) => {
+    const categories = await summaryBycategories(req.user.id);
+
+    res.json({
+        status: 200,
+        message: `Successfully found categories and their total sums!`,
+        data: categories,
+    });
+    };

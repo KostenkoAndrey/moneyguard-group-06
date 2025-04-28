@@ -4,6 +4,7 @@ import { User } from '../db/models/user.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { validateTransactionPayload } from '../utils/validateTransactionPayload.js';
 import { updateBalanceOnCreate, updateBalanceOnDelete, updateBalanceOnUpdate } from '../utils/balanceUtils.js';
+import { ALLOWED_CATEGORIES } from '../constants/index.js';
 
 export const getAllTransactions = async ({
   page,
@@ -113,3 +114,30 @@ export const updateTransaction = async (filter, payload, options = {}) => {
     isNew: Boolean(rawResult?.lastErrorObject?.upserted),
   };
 };
+
+
+export const summaryBycategories = async ( id ) => {
+  const transactions = await transactionsCollection.find({ userId: id });
+
+    const incomeSummary = { "income": 0 };
+    const expenseSummary = ALLOWED_CATEGORIES
+      .filter(category => category !== 'income')
+      .reduce((acc, category) => {
+        acc[category] = 0;
+        return acc;
+      }, {});
+
+    transactions.reduce((_, { category, sum }) => {
+      if (category === 'income') {
+        incomeSummary.income += sum;
+      } else if (Object.prototype.hasOwnProperty.call(expenseSummary, category)) {
+        expenseSummary[category] += sum;
+      }
+    }, null);
+
+    return ({
+      incomes: incomeSummary,
+      expenses: expenseSummary
+    });
+};
+

@@ -25,6 +25,7 @@ export const startServer = () => {
   app.use(cors({
     origin: [ 'http://localhost:3000',
       'http://localhost:5173',
+      'https://run-your-budget-fc-110.vercel.app',
       'https://moneyguard-group-06.onrender.com'
     ],
     credentials: true,
