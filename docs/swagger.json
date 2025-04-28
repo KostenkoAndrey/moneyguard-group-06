@@ -685,6 +685,142 @@
           }
         }
       }
+    },
+    "/transactions/categories": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Get list of categories",
+        "operationId": "getCategories",
+        "description": "Returns summary of income and expenses categories",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found summary of categories!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200,
+                      "description": "Response status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found categories and their total sums!",
+                      "description": "Response message"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/summary"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/tx_404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/transactions/summary/{yearMonth}": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Get monthly summary",
+        "operationId": "getMonthlySummary",
+        "description": "Returns income and expenses summary for the specified month",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "yearMonth",
+            "in": "path",
+            "required": true,
+            "description": "Month and year in YYYY-MM format (e.g., 2024-04)",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved monthly summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully retrieved monthly summary!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "date"
+                      ],
+                      "properties": {
+                        "date": {
+                          "type": "string",
+                          "format": "date",
+                          "example": "2022-02",
+                          "description": "The date for the summary in YYYY-MM format"
+                        },
+                        "data": {
+                          "$ref": "#/components/schemas/summary"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "Monthly summary not found"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -781,6 +917,69 @@
             "type": "string",
             "description": "Parent's id",
             "example": "65e4decdd286b30065d54aw2"
+          }
+        }
+      },
+      "summary": {
+        "type": "object",
+        "required": [
+          "iSummary",
+          "eSummary"
+        ],
+        "properties": {
+          "iSummary": {
+            "type": "object",
+            "required": [
+              "income",
+              "totalIncome"
+            ],
+            "description": "Summary of income",
+            "properties": {
+              "income": {
+                "type": "integer",
+                "example": 1000,
+                "description": "Total income for the period"
+              },
+              "totalIncome": {
+                "type": "integer",
+                "example": 1000,
+                "description": "Total income accumulated"
+              }
+            }
+          },
+          "eSummary": {
+            "type": "object",
+            "required": [
+              "expenses",
+              "totalExpenses"
+            ],
+            "description": "Summary of expenses",
+            "properties": {
+              "expenses": {
+                "type": "object",
+                "description": "Breakdown of expenses by category",
+                "additionalProperties": {
+                  "type": "integer"
+                },
+                "example": {
+                  "main expenses": 5000,
+                  "products": 500,
+                  "car": 7500,
+                  "self care": 700,
+                  "child care": 900,
+                  "household products": 1000,
+                  "education": 12000,
+                  "leisure": 13000,
+                  "entertainment": 16000,
+                  "other expenses": 17000
+                }
+              },
+              "totalExpenses": {
+                "type": "integer",
+                "example": 71700,
+                "description": "Total expenses accumulated"
+              }
+            }
           }
         }
       }

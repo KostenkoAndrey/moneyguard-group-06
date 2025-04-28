@@ -8,6 +8,7 @@ import {
     upsertTransactionController,
     patchTransactionController,
     categoriesController,
+    summaryController,
 } from '../controllers/transactions.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { isValidId } from '../middlewares/isValidId.js';
@@ -17,6 +18,7 @@ import { createTransactionSchema, updateTransactionSchema } from '../validation/
 
 const router = Router();
 
+router.get('/summary/:yearMonth', ctrlWrapper(summaryController));
 router.get('/categories', ctrlWrapper(categoriesController));
 router.get('/', ctrlWrapper(getTransactionsController));
 router.get('/:transactionId', isValidId, ctrlWrapper(getTransactionByIdController));

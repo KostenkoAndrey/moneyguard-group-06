@@ -1,0 +1,47 @@
+type: object
+required:
+  - iSummary
+  - eSummary
+properties:
+  iSummary:
+    type: object
+    required:
+      - income
+      - totalIncome
+    description: "Summary of income"
+    properties:
+      income:
+        type: integer
+        example: 1000
+        description: "Total income for the period"
+      totalIncome:
+        type: integer
+        example: 1000
+        description: "Total income accumulated"
+  eSummary:
+    type: object
+    required:
+      - expenses
+      - totalExpenses
+    description: "Summary of expenses"
+    properties:
+      expenses:
+        type: object
+        description: "Breakdown of expenses by category"
+        additionalProperties:
+          type: integer
+        example:
+          main expenses: 5000
+          products: 500
+          car: 7500
+          self care: 700
+          child care: 900
+          household products: 1000
+          education: 12000
+          leisure: 13000
+          entertainment: 16000
+          other expenses: 17000
+      totalExpenses:
+        type: integer
+        example: 71700
+        description: "Total expenses accumulated"

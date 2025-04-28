@@ -1,0 +1,36 @@
+tags:
+  - Transactions
+summary: Get list of categories
+operationId: getCategories
+description: 'Returns summary of income and expenses categories'
+security:
+  - bearerAuth: []
+responses:
+  '200':
+    description: Successfully found summary of categories!
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+              description: "Response status code"
+            message:
+              type: string
+              example: Successfully found categories and their total sums!
+              description: "Response message"
+            data:
+              $ref: '../../components/schemas/summary.yaml'
+
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '404':
+    $ref: '../../components/responses/transactions/tx_404.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'

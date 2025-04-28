@@ -3,8 +3,12 @@ import { transactionsCollection } from '../db/models/transactions.js';
 import { User } from '../db/models/user.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { validateTransactionPayload } from '../utils/validateTransactionPayload.js';
-import { updateBalanceOnCreate, updateBalanceOnDelete, updateBalanceOnUpdate } from '../utils/balanceUtils.js';
-import { ALLOWED_CATEGORIES } from '../constants/index.js';
+import {
+  updateBalanceOnCreate,
+  updateBalanceOnDelete,
+  updateBalanceOnUpdate,
+} from '../utils/balanceUtils.js';
+import { totalExspensesIncome } from '../utils/totalExspensesIncome.js';
 
 export const getAllTransactions = async ({
   page,
@@ -14,7 +18,6 @@ export const getAllTransactions = async ({
   filter = {},
   userId,
 }) => {
-
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
@@ -115,29 +118,28 @@ export const updateTransaction = async (filter, payload, options = {}) => {
   };
 };
 
-
-export const summaryBycategories = async ( id ) => {
+export const summaryByCategories = async (id) => {
   const transactions = await transactionsCollection.find({ userId: id });
+  const total = totalExspensesIncome(transactions);
 
-    const incomeSummary = { "income": 0 };
-    const expenseSummary = ALLOWED_CATEGORIES
-      .filter(category => category !== 'income')
-      .reduce((acc, category) => {
-        acc[category] = 0;
-        return acc;
-      }, {});
-
-    transactions.reduce((_, { category, sum }) => {
-      if (category === 'income') {
-        incomeSummary.income += sum;
-      } else if (Object.prototype.hasOwnProperty.call(expenseSummary, category)) {
-        expenseSummary[category] += sum;
-      }
-    }, null);
-
-    return ({
-      incomes: incomeSummary,
-      expenses: expenseSummary
-    });
+  return total;
 };
 
+export const summaryByDate = async (year, month, id) => {
+  const startDate = new Date(`${year}-${month}-01T00:00:00.000Z`);
+  const endDate = new Date(startDate);
+  endDate.setMonth(startDate.getMonth() + 1);
+
+  const transactions = await transactionsCollection.aggregate([
+    {
+      $match: {
+        userId: id,
+        date: { $gte: startDate, $lte: endDate },
+      },
+    },
+  ]);
+
+  const total = totalExspensesIncome(transactions);
+
+  return total;
+};
