@@ -46,7 +46,7 @@ export async function registerController(req, res) {
 //** login user  */
 export async function loginController(req, res) {
     await loginUser(req.body.email, req.body.password);
-
+    console.log('+++++++++req.body++++++++', req.body);
     const session = await loginUser(req.body.email, req.body.password);
 
     res.cookie("sessionId", session._id, {
@@ -139,10 +139,8 @@ export async function resetPasswordController(req, res) {
 }
 
 
-
 //** update userInfo (PATCH)   */
 export async function updateUserSchemaController(req, res) {
-
     let photo = null;
     if (req.file) {
         if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
@@ -155,11 +153,8 @@ export async function updateUserSchemaController(req, res) {
         }
     }
     const tmpUsInf = await getUserInfo(req.cookies.sessionId, req.cookies.refreshToken);
-    // console.log('tenpUserInfo', tmpUsInf);
-
     const userId = tmpUsInf._id;
     const contact = req.body;
-
     const result = await updateContact(
         userId,
         contact,
