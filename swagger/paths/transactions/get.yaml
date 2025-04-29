@@ -12,14 +12,12 @@ parameters:
       type: integer
       example: 1
     description: Page number for pagination
-
   - in: query
     name: perPage
     schema:
       type: integer
       example: 10
     description: Number of items per page
-
   - in: query
     name: sortBy
     schema:
@@ -27,7 +25,6 @@ parameters:
       enum: ['_id', 'type', 'category', 'sum', 'comment', 'date']
       example: '_id'
     description: 'Default value - _id'
-
   - in: query
     name: sortOrder
     schema:
@@ -35,7 +32,6 @@ parameters:
       enum: ['asc', 'desc']
       example: 'asc'
     description: 'Sorting order: "asc" for ascending, "desc" for descending'
-
   - in: query
     name: type
     schema:
@@ -77,6 +73,20 @@ parameters:
       maximum: 1000000
       example: 10000
     description: 'Maximum transaction amount for filtering'
+  - in: query
+    name: startDate
+    schema:
+      type: string
+      format: date
+      example: '2025-04-01'
+    description: 'Start date for filtering transactions (inclusive)'
+  - in: query
+    name: endDate
+    schema:
+      type: string
+      format: date
+      example: '2025-04-30'
+    description: 'End date for filtering transactions (inclusive)'
 responses:
   '200':
     description: Successfully found transactions!

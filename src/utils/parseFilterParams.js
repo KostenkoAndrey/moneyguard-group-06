@@ -19,18 +19,28 @@ const parseNumber = (number) => {
   return parsedNumber;
 };
 
+const parseDate = (value) => {
+  if (typeof value !== 'string' || value.trim() === '') return null;
+  const parsed = new Date(value.trim());
+  return isNaN(parsed.getTime()) ? null : parsed;
+};
+
 export const parseFilterParams = (query) => {
-  const { type, category, minSum, maxSum } = query;
+  const { type, category, minSum, maxSum, startDate, endDate } = query;
 
   const parsedType = parseType(type);
   const parsedCategory = parseCategory(category);
   const parsedMinSum = parseNumber(minSum);
   const parsedMaxSum = parseNumber(maxSum);
+  const parsedStartDate = parseDate(startDate);
+  const parsedEndDate = parseDate(endDate);
 
   return {
     type: parsedType,
     category: parsedCategory,
     minSum: parsedMinSum,
     maxSum: parsedMaxSum,
+    startDate: parsedStartDate,
+    endDate: parsedEndDate,
   };
 };
