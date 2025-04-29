@@ -62,9 +62,14 @@ export const deleteTransactionController = async (req, res, next) => {
 
   const transaction = await deleteTransaction(transactionId, req.user.id);
 
+
   if (!transaction) return next(createHttpError(404, 'Transaction not found'));
 
-  res.status(204).send();
+  res.status(200).json({
+    status: 200,
+    message: `Successfully deleted transaction!`,
+    data: transaction,
+  });
 };
 
 export const upsertTransactionController = async (req, res, next) => {
