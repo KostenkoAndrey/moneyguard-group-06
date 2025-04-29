@@ -1,4 +1,4 @@
-import crypto from 'node:crypto';
+import crypto, { randomBytes } from 'node:crypto';
 import bcrypt from 'bcrypt';
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
@@ -9,41 +9,83 @@ import jwt from 'jsonwebtoken';
 import * as fs from 'fs';
 import path from 'node:path';
 import handlebars from 'handlebars';
+import { THIRTY_DAY, ONE_DAY } from '../constants/index.js';
 
 const RESET_PWD_TEMPLATE = fs.readFileSync(path.resolve('src/templates/reset-password.hbs'), 'utf-8');
 
 
-//** register user   */
-export async function registerUser(payload) {
+export const registerUser = async (payload) => {
     const user = await User.findOne({ email: payload.email });
-    if (user) {
-        throw new createHttpError(409, 'Email in use');
-    }
-    payload.password = await bcrypt.hash(payload.password, 10);
+    if (user) throw createHttpError(409, 'Email in use');
 
-    return User.create(payload);
-}
+    const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
-//** login user  */
-export async function loginUser(email, password) {
-    const user = await User.findOne({ email });
-    if (user === null) {
-        throw createHttpError.Unauthorized('Email or password is incorrect');
+    return await User.create({
+      ...payload,
+      password: encryptedPassword,
+    });
+  };
+
+
+  export const loginUser = async (payload) => {
+    const user = await User.findOne({ email: payload.email });
+
+    if (!user) {
+      throw createHttpError(401, 'User not found');
     }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (isMatch !== true) {
-        throw createHttpError.Unauthorized('Email or password is incorrect');
+
+    const isEqual = await bcrypt.compare(payload.password, user.password);
+
+    if (!isEqual) {
+      throw createHttpError(401, 'Unauthorized');
     }
+
     await Session.deleteOne({ userId: user._id });
 
-    return Session.create({
-        userId: user._id,
-        accessToken: crypto.randomBytes(30).toString('base64'),
-        refreshToken: crypto.randomBytes(30).toString('base64'),
-        accessTokenValidUntil: new Date(Date.now() + 24 * 60 * 60 * 1000), // 15 хвилин
-        refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 днів
+    const accessToken = randomBytes(30).toString('base64');
+    const refreshToken = randomBytes(30).toString('base64');
+
+    return await Session.create({
+      userId: user._id,
+      accessToken,
+      refreshToken,
+      accessTokenValidUntil: new Date(Date.now() + ONE_DAY),
+      refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAY),
     });
-}
+  };
+
+
+//** register user   */
+// export async function registerUser(payload) {
+//     const user = await User.findOne({ email: payload.email });
+//     if (user) {
+//         throw new createHttpError(409, 'Email in use');
+//     }
+//     payload.password = await bcrypt.hash(payload.password, 10);
+
+//     return User.create(payload);
+// }
+
+//** login user  */
+// export async function loginUser(email, password) {
+//     const user = await User.findOne({ email });
+//     if (user === null) {
+//         throw createHttpError.Unauthorized('Email or password is incorrect');
+//     }
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (isMatch !== true) {
+//         throw createHttpError.Unauthorized('Email or password is incorrect');
+//     }
+//     await Session.deleteOne({ userId: user._id });
+
+//     return Session.create({
+//         userId: user._id,
+//         accessToken: crypto.randomBytes(30).toString('base64'),
+//         refreshToken: crypto.randomBytes(30).toString('base64'),
+//         accessTokenValidUntil: new Date(Date.now() + 24 * 60 * 60 * 1000), // 15 хвилин
+//         refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 днів
+//     });
+// }
 
 //** logout user  */
 export async function logoutUser(sessionId, refreshToken) {

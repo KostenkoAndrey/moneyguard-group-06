@@ -1,0 +1,59 @@
+tags:
+  - User
+summary: Get user info
+operationId: getUserInfo
+description: 'Returns the authenticated user information'
+security:
+  - bearerAuth: []
+responses:
+  '200':
+    description: Successfully found user info!
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully found user info!
+            data:
+              type: object
+              required:
+                - id
+                - name
+                - email
+                - balance
+                - photo
+              properties:
+                id:
+                  type: string
+                  description: "User's ID"
+                  example: "680b8f4b54856e551f63599c"
+                name:
+                  type: string
+                  description: "User's name"
+                  example: "Kostenko"
+                email:
+                  type: string
+                  description: "User's email"
+                  example: "kostenko@gmail.com"
+                balance:
+                  type: number
+                  description: "User's balance"
+                  example: 888.88
+                photo:
+                  type: string
+                  description: "URL of the user's profile photo"
+                  format: uri
+                  example: "https://example.com/path/to/photo.jpg"
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'

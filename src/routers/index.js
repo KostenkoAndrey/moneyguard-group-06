@@ -8,6 +8,6 @@ const router = Router();
 
 router.use('/auth', authRouter);
 router.use('/transactions', authenticate, transactionsRouter);
-router.use('/', userRouter);
+router.use('/', authenticate, userRouter);
 
 export default router;

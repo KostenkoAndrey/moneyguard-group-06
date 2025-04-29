@@ -27,6 +27,11 @@ paths:
   /auth/logout:
     post:
       $ref: ../swagger/paths/auth/logout.yaml
+  /user:
+    get:
+      $ref: ../swagger/paths/user/get.yaml
+    patch:
+      $ref: ../swagger/paths/user/patch.yaml
   /transactions:
     get:
       $ref: ../swagger/paths/transactions/get.yaml

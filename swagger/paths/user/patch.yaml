@@ -1,0 +1,48 @@
+tags:
+  - User
+summary: Update user info
+operationId: updateUserInfo
+description: 'Update user info'
+security:
+  - bearerAuth: []
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          name:
+            description: "User's name"
+            type: string
+            example: 'John Doe'
+          photo:
+            description: "Link to user's photo"
+            type: string
+            format: binary
+responses:
+  '200':
+    description: Successfully updated a user!
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully updated a user!
+            data:
+              type: object
+              $ref: '../../components/schemas/user.yaml'
+  '400':
+    $ref: '../../components/responses/user/u_400.yaml'
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'
