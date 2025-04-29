@@ -16,3 +16,8 @@ properties:
     description: "User's balance"
     type: string
     example: 888.88
+  photo:
+    description: "URL of the user's profile photo"
+    type: string
+    format: uri
+    example: "https://example.com/path/to/photo.jpg"
