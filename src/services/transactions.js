@@ -37,6 +37,13 @@ export const getAllTransactions = async ({
     if (filter.maxSum) queryObject.sum.$lte = filter.maxSum;
   }
 
+  if (filter.startDate || filter.endDate) {
+    queryObject.date = {};
+    if (filter.startDate) queryObject.date.$gte = filter.startDate;
+    if (filter.endDate) queryObject.date.$lte = filter.endDate;
+  }
+console.log(filter);
+
   const [transactionsCount, transactions] = await Promise.all([
     transactionsCollection.find(queryObject).countDocuments(),
     transactionsCollection

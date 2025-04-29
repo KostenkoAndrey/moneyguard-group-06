@@ -523,6 +523,26 @@
               "example": 10000
             },
             "description": "Maximum transaction amount for filtering"
+          },
+          {
+            "in": "query",
+            "name": "startDate",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2025-04-01"
+            },
+            "description": "Start date for filtering transactions (inclusive)"
+          },
+          {
+            "in": "query",
+            "name": "endDate",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2025-04-30"
+            },
+            "description": "End date for filtering transactions (inclusive)"
           }
         ],
         "responses": {
