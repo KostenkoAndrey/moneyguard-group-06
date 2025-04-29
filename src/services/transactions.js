@@ -134,7 +134,7 @@ export const summaryByDate = async (year, month, id) => {
     {
       $match: {
         userId: id,
-        date: { $gte: startDate, $lte: endDate },
+        date: { $gte: startDate, $lt: endDate },
       },
     },
   ]);

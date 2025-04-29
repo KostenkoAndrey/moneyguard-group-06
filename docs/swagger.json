@@ -828,8 +828,65 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Delete transaction by id"
+          "200": {
+            "description": "Successfully deleted transaction",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully deleted transaction!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "680bb29ccc1a1dded4914ab3"
+                        },
+                        "type": {
+                          "type": "string",
+                          "example": "income"
+                        },
+                        "category": {
+                          "type": "string",
+                          "example": "income"
+                        },
+                        "sum": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "comment": {
+                          "type": "string",
+                          "example": "1"
+                        },
+                        "date": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2022-08-30T03:00:00.000Z"
+                        },
+                        "userId": {
+                          "type": "string",
+                          "example": "680b8f4b54856e551f63599c"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-04-25T16:04:44.319Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-04-25T16:04:44.319Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/tx_400"
