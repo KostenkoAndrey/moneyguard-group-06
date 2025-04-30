@@ -1,6 +1,8 @@
 import { SORT_ORDER } from '../constants/index.js';
+
 import { transactionsCollection } from '../db/models/transactions.js';
 import { User } from '../db/models/user.js';
+
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { validateTransactionPayload } from '../utils/validateTransactionPayload.js';
 import {
@@ -9,6 +11,7 @@ import {
   updateBalanceOnUpdate,
 } from '../utils/balanceUtils.js';
 import { totalExspensesIncome } from '../utils/totalExspensesIncome.js';
+import { compareDate } from '../utils/compareDate.js';
 
 export const getAllTransactions = async ({
   page,
@@ -40,53 +43,29 @@ export const getAllTransactions = async ({
   if (filter.startDate || filter.endDate) {
     const start = new Date(filter.startDate);
     const end = new Date(filter.endDate);
-
     const isSameDay =
       start.getUTCFullYear() === end.getUTCFullYear() &&
       start.getUTCMonth() === end.getUTCMonth() &&
       start.getUTCDate() === end.getUTCDate();
 
     if (isSameDay) {
-      const dayStart = new Date(Date.UTC(
-        start.getUTCFullYear(),
-        start.getUTCMonth(),
-        start.getUTCDate(),
-        0, 0, 0, 0
-      ));
-      const dayEnd = new Date(Date.UTC(
-        start.getUTCFullYear(),
-        start.getUTCMonth(),
-        start.getUTCDate(),
-        23, 59, 59, 999
-      ));
-
+      const compareObj = compareDate(start);
       queryObject.date = {
-        $gte: dayStart,
-        $lte: dayEnd,
+        $gte: compareObj.dayStart,
+        $lte: compareObj.dayEnd,
       };
     } else {
       queryObject.date = {};
       if (filter.startDate) {
-        const dayStart = new Date(Date.UTC(
-          start.getUTCFullYear(),
-          start.getUTCMonth(),
-          start.getUTCDate(),
-          0, 0, 0, 0
-        ));
-        queryObject.date.$gte = dayStart;
+        const compareObj = compareDate(start);
+        queryObject.date.$gte = compareObj.dayStart;
       }
       if (filter.endDate) {
-        const dayEnd = new Date(Date.UTC(
-          end.getUTCFullYear(),
-          end.getUTCMonth(),
-          end.getUTCDate(),
-          23, 59, 59, 999
-        ));
-        queryObject.date.$lte = dayEnd;
+        const compareObj = compareDate(end);
+        queryObject.date.$lte = compareObj.dayEnd;
       }
     }
   }
-console.log(filter);
 
   const [transactionsCount, transactions] = await Promise.all([
     transactionsCollection.find(queryObject).countDocuments(),
