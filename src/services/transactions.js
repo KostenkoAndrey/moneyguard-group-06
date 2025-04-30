@@ -38,9 +38,53 @@ export const getAllTransactions = async ({
   }
 
   if (filter.startDate || filter.endDate) {
-    queryObject.date = {};
-    if (filter.startDate) queryObject.date.$gte = filter.startDate;
-    if (filter.endDate) queryObject.date.$lte = filter.endDate;
+    const start = new Date(filter.startDate);
+    const end = new Date(filter.endDate);
+
+    const isSameDay =
+      start.getUTCFullYear() === end.getUTCFullYear() &&
+      start.getUTCMonth() === end.getUTCMonth() &&
+      start.getUTCDate() === end.getUTCDate();
+
+    if (isSameDay) {
+      const dayStart = new Date(Date.UTC(
+        start.getUTCFullYear(),
+        start.getUTCMonth(),
+        start.getUTCDate(),
+        0, 0, 0, 0
+      ));
+      const dayEnd = new Date(Date.UTC(
+        start.getUTCFullYear(),
+        start.getUTCMonth(),
+        start.getUTCDate(),
+        23, 59, 59, 999
+      ));
+
+      queryObject.date = {
+        $gte: dayStart,
+        $lte: dayEnd,
+      };
+    } else {
+      queryObject.date = {};
+      if (filter.startDate) {
+        const dayStart = new Date(Date.UTC(
+          start.getUTCFullYear(),
+          start.getUTCMonth(),
+          start.getUTCDate(),
+          0, 0, 0, 0
+        ));
+        queryObject.date.$gte = dayStart;
+      }
+      if (filter.endDate) {
+        const dayEnd = new Date(Date.UTC(
+          end.getUTCFullYear(),
+          end.getUTCMonth(),
+          end.getUTCDate(),
+          23, 59, 59, 999
+        ));
+        queryObject.date.$lte = dayEnd;
+      }
+    }
   }
 console.log(filter);
 
