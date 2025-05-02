@@ -16,7 +16,8 @@ const userSchema = new mongoose.Schema({
     },
     balance: {
         type: Number,
-        default: 0
+        default: 0,
+        set: n => Number(n.toFixed(2))
     },
     photo: {
         type: String,

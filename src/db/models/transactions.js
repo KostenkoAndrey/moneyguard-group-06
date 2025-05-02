@@ -27,7 +27,8 @@ const transactionsSchema = new Schema(
         sum: {
             type: Number,
             min: 0,
-            required: true
+            required: true,
+            set: n => Number(n.toFixed(2))
         },
         comment: {
             type: String,
