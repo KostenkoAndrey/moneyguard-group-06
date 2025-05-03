@@ -4,15 +4,13 @@ import createHttpError from 'http-errors';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 
-
 export async function getUserController(req, res, next) {
-
   const user = await userGetInfo(req.user.id);
 
-if(!user) {
-  next(createHttpError(404, 'User not found'));
-  return;
-}
+  if (!user) {
+    next(createHttpError(404, 'User not found'));
+    return;
+  }
 
   res.status(200).json({
     status: 200,
@@ -25,6 +23,7 @@ export async function patchUserController(req, res, next) {
   const photo = req.file;
 
   let photoUrl;
+  const shouldRemovePhoto = req.body.photo === 'null';
 
   if (photo) {
     if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
@@ -32,10 +31,13 @@ export async function patchUserController(req, res, next) {
     } else {
       photoUrl = await saveFileToUploadDir(photo);
     }
+  } else if (shouldRemovePhoto) {
+    delete req.body.photo;
   }
+
   const result = await updateUser(req.user.id, {
     ...req.body,
-    photo: photoUrl,
+    photo: shouldRemovePhoto ? null : photoUrl,
   });
 
   if (!result) {
